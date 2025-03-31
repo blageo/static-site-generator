@@ -1,2 +1,2 @@
 # static-site-generator
-python static website generator
+Project for boot.dev creating a python static website generator that can serve static content like blog posts/documentation.
