@@ -9,16 +9,19 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             new_nodes.append(node)
             continue
         
+        split = []
         parts = node.text.split(delimiter)
 
         if len(parts) % 2 == 0:
             raise ValueError(f"Invalid markdown Syntax (unmatched delimiter): {delimiter}")
         
-        for i,part in enumerate(parts):
-            if i % 2 == 0:  
-                new_nodes.append(TextNode(part, TextType.TEXT))
+        for i in range(len(parts)):
+            if parts[i] == "":
+                continue
+            if i % 2 == 0:
+                split.append(TextNode(parts[i], TextType.TEXT))
             else:
-                new_nodes.append(TextNode(part, text_type))
-        
+                split.append(TextNode(parts[i], text_type))
+        new_nodes.extend(split)
     return new_nodes
 
