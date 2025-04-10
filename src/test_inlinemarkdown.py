@@ -1,6 +1,7 @@
 import unittest
 from textnode import TextNode, TextType
-from inlinemarkdown import split_nodes_delimiter
+from inlinemarkdown import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+
 
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_split_nodes_delimiter_code(self):
@@ -85,6 +86,46 @@ class TestSplitNodesDelimiter(unittest.TestCase):
             TextNode("Bold", TextType.BOLD),
             TextNode("Another", TextType.BOLD),
         ])
+
+
+class TestExtractMarkdownLinks(unittest.TestCase):
+    def test_extract_markdown_links(self):
+        text = "This is a [link](https://example.com) and another [link](https://example2.com)"
+        links = extract_markdown_links(text)
+        self.assertEqual(links, [
+            ("link", "https://example.com"),
+            ("link", "https://example2.com"),
+        ])
+
+    def test_extract_markdown_links_no_links(self):
+        text = "This is a text without links"
+        links = extract_markdown_links(text)
+        self.assertEqual(links, [])
+
+    def test_extract_markdown_links_empty_string(self):
+        text = ""
+        links = extract_markdown_links(text)
+        self.assertEqual(links, [])
+
+
+class TestExtractMarkdownImages(unittest.TestCase):
+    def test_extract_markdown_images(self):
+        text = "This is an ![alt text](https://example.com/image.png) and another ![alt text](https://example2.com/image2.png)"
+        images = extract_markdown_images(text)
+        self.assertEqual(images, [
+            ("alt text", "https://example.com/image.png"),
+            ("alt text", "https://example2.com/image2.png"),
+        ])
+    
+    def test_extract_markdown_images_no_images(self):
+        text = "This is a text without images"
+        images = extract_markdown_images(text)
+        self.assertEqual(images, [])
+    
+    def test_extract_markdown_images_empty_string(self):
+        text = ""
+        images = extract_markdown_images(text)
+        self.assertEqual(images, [])
 
 
 if __name__ == "__main__":
