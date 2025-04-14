@@ -1,6 +1,6 @@
 import unittest
 from textnode import TextNode, TextType
-from inlinemarkdown import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+from inlinemarkdown import split_nodes_delimiter, split_nodes_link, extract_markdown_images, extract_markdown_links
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):
@@ -88,6 +88,47 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         ])
 
 
+class TestSplitNodesLink(unittest.TestCase):
+    def test_split_nodes_link(self):
+        node = TextNode("This is a [clickable link](https://example.com) and another [clickable link](https://example2.com)", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(new_nodes, [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("clickable link", TextType.LINK, "https://example.com"),
+            TextNode(" and another ", TextType.TEXT),
+            TextNode("clickable link", TextType.LINK, "https://example2.com"),
+        ])
+
+    def test_split_nodes_link_no_links(self):
+        node = TextNode("This is a text without links", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(new_nodes, [TextNode("This is a text without links", TextType.TEXT)])
+
+    def test_split_nodes_link_empty_string(self):
+        node = TextNode("", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(new_nodes, [TextNode("", TextType.TEXT)])
+
+    def test_split_nodes_link_extra_whitespace(self):
+        node = TextNode("This is a [ clickable link ]( https://example.com ) and another [ clickable link ]( https://example2.com )", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(new_nodes, [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("clickable link", TextType.LINK, "https://example.com"),
+            TextNode(" and another ", TextType.TEXT),
+            TextNode("clickable link", TextType.LINK, "https://example2.com"),
+        ])
+
+    def test_split_nodes_link_empty_alt_text(self):
+        node = TextNode("This is a [ ](https://example.com) with an empty alt text", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(new_nodes, [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("", TextType.LINK, "https://example.com"),
+            TextNode(" with an empty alt text", TextType.TEXT),
+        ])
+
+
 class TestExtractMarkdownLinks(unittest.TestCase):
     def test_extract_markdown_links(self):
         text = "This is a [link](https://example.com) and another [link](https://example2.com)"
@@ -106,6 +147,12 @@ class TestExtractMarkdownLinks(unittest.TestCase):
         text = ""
         links = extract_markdown_links(text)
         self.assertEqual(links, [])
+
+    def test_extract_markdown_links_extra_whitespace(self):
+        text = "[  alt text  ](  https://example.com  )"
+        assert extract_markdown_links(text) == [
+            ("alt text", "https://example.com"),
+        ]
 
 
 class TestExtractMarkdownImages(unittest.TestCase):
