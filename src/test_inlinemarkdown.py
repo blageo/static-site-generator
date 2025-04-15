@@ -1,6 +1,38 @@
 import unittest
 from textnode import TextNode, TextType
-from inlinemarkdown import split_nodes_delimiter, split_nodes_link, split_nodes_image, extract_markdown_images, extract_markdown_links
+from inlinemarkdown import text_to_textnodes, split_nodes_delimiter, split_nodes_link, split_nodes_image, extract_markdown_images, extract_markdown_links
+
+class TestTestToTextNodes(unittest.TestCase):
+    def test_text_to_text_nodes(self):
+        text = "This is a **bold** and _italic_ and `code` and ~~strikethrough~~ and [link](https://example.com) and ![image](https://example.com/image.png)"
+        expected_nodes = [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("code", TextType.CODE),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("strikethrough", TextType.STRIKETHROUGH),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://example.com"),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://example.com/image.png"),
+        ]
+        new_nodes = text_to_textnodes(text)
+        self.assertEqual(new_nodes, expected_nodes)
+    
+    def test_text_to_text_nodes_empty(self):
+        text = ""
+        expected_nodes = []
+        new_nodes = text_to_textnodes(text)
+        self.assertEqual(new_nodes, expected_nodes)
+
+    def test_text_to_text_nodes_no_delimiters(self):
+        text = "This is a plain text without any formatting."
+        expected_nodes = [TextNode(text, TextType.TEXT)]
+        new_nodes = text_to_textnodes(text)
+        self.assertEqual(new_nodes, expected_nodes)
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):

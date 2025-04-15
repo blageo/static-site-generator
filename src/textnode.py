@@ -6,6 +6,7 @@ class TextType(Enum):
     BOLD = "BOLD"
     ITALIC = "ITALIC"
     CODE = "CODE"
+    STRIKETHROUGH = "STRIKETHROUGH"
     LINK = "LINK"
     IMAGE = "IMAGE"
 
@@ -35,6 +36,8 @@ def text_node_to_html_node(text_node):
             return LeafNode("b", text_node.text)
         case TextType.ITALIC:
             return LeafNode("i", text_node.text)
+        case TextType.STRIKETHROUGH:
+            return LeafNode("s", text_node.text)
         case TextType.CODE:
             return LeafNode("code", text_node.text)
         case TextType.LINK:
