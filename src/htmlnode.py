@@ -28,7 +28,7 @@ class HTMLNode():
     def props_to_html(self):
         if not self.props:
             return ""
-        return " ".join(map(lambda kv: f"{kv[0]}='{kv[1]}'", self.props.items()))
+        return " ".join(map(lambda kv: f'{kv[0]}="{kv[1]}"', self.props.items()))
 
 
 class LeafNode(HTMLNode):

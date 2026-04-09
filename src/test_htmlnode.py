@@ -26,7 +26,7 @@ class TestHTMLNode(unittest.TestCase):
 
 	def test_props_to_html(self):
 		node = HTMLNode("a", "Click here", [], {"href": "https://example.com", "target": "_blank"})
-		self.assertEqual(node.props_to_html(), "href='https://example.com' target='_blank'")
+		self.assertEqual(node.props_to_html(), 'href="https://example.com" target="_blank"')
 
 		node_empty_props = HTMLNode("p", "No props", [], {})
 		self.assertEqual(node_empty_props.props_to_html(), "")
@@ -47,15 +47,15 @@ class TestLeafNode(unittest.TestCase):
 
     def test_leaf_to_html_a(self):
         node = LeafNode("a", "Go to google.com!", {"href": "https://www.google.com"})
-        self.assertEqual(node.to_html(), "<a href='https://www.google.com'>Go to google.com!</a>")
+        self.assertEqual(node.to_html(), '<a href="https://www.google.com">Go to google.com!</a>')
 
     def test_leaf_to_html_img(self):
         node = LeafNode("img", "Alt text", {"src": "image.jpg"})
-        self.assertEqual(node.to_html(), "<img src='image.jpg'>Alt text</img>")
+        self.assertEqual(node.to_html(), '<img src="image.jpg">Alt text</img>')
 
     def test_leaf_to_html_input(self):
         node = LeafNode("input", "Default text", {"type": "text", "name": "username"})
-        self.assertEqual(node.to_html(), "<input type='text' name='username'>Default text</input>")
+        self.assertEqual(node.to_html(), '<input type="text" name="username">Default text</input>')
 
     def test_leaf_to_html_em(self):
         node = LeafNode("em", "emphasized text")
@@ -120,7 +120,7 @@ class TestParentNode(unittest.TestCase):
         parent_node = ParentNode("div", [child_node])
         self.assertEqual(
             parent_node.to_html(),
-            "<div><a href='https://www.google.com'>Go to google.com!</a></div>"
+            '<div><a href="https://www.google.com">Go to google.com!</a></div>'
         )
 
 if __name__ == "__main__":
