@@ -1,9 +1,24 @@
-from textnode import TextNode, TextType
+import os
+import shutil
+
+
+def copy_static(src, dst):
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
+    os.mkdir(dst)
+
+    for entry in os.listdir(src):
+        src_path = os.path.join(src, entry)
+        dst_path = os.path.join(dst, entry)
+        if os.path.isfile(src_path):
+            print(f"Copying {src_path} -> {dst_path}")
+            shutil.copy(src_path, dst_path)
+        else:
+            copy_static(src_path, dst_path)
 
 
 def main():
-    node = TextNode("boop boop beep beep", TextType.LINK, "https://www.boot.dev")
-    print(node)
+    copy_static("static", "public")
 
 
 if __name__ == "__main__":
