@@ -56,6 +56,7 @@ def generate_pages_recursive(basepath, content_dir, template_path, dest_dir):
 def main():
     basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     copy_static("static", "docs")
+    open("docs/.nojekyll", "w").close()  # Create .nojekyll to prevent GitHub Pages from ignoring files starting with _
     generate_pages_recursive(basepath, "content", "template.html", "docs")
 
 
