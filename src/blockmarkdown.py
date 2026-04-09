@@ -41,9 +41,9 @@ def block_to_block_type(block):
 		return BlockType.CODE
 
 	# Check for quote
-	if block.startswith("> "):
+	if block.startswith(">"):
 		for line in lines:
-			if not line.startswith("> "):
+			if not line.startswith(">"):
 				return BlockType.PARAGRAPH
 		return BlockType.QUOTE
 	
@@ -84,7 +84,7 @@ def code_node(block):
 
 def quote_node(block):
     lines = block.split('\n')
-    text = '\n'.join(line[2:] for line in lines)
+    text = '\n'.join(line[2:] if line.startswith("> ") else line[1:] for line in lines)
     return ParentNode("blockquote", text_to_children(text))
 
 def unordered_list_node(block):
